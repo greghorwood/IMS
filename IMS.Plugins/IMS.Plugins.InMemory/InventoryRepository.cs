@@ -43,7 +43,6 @@ namespace IMS.Plugins.InMemory
         public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
         {
             var inv = _inventories.First(x => x.InventoryId == inventoryId);
-
             var newInv = new Inventory
             {
                 InventoryId = inv.InventoryId, 
