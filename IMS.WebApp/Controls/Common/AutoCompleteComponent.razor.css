@@ -9,9 +9,13 @@
 
 div ul {
     list-style-type: none;
-    margin-bottom: 16px;
+    margin-bottom: 5px;
 }
 
 <div ul li {
     cursor: pointer;
+}
+
+.selected {
+    background-color: aqua;
 }
