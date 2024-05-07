@@ -3,7 +3,6 @@
 
 
 @inject NavigationManager NavigationManager
-@inject IViewInventoriesByNameUseCase ViewInventoriesByNameUseCase
 
 <h3>InventoryList</h3>
 <br />
@@ -18,18 +17,7 @@
     class="btn btn-primary"
     @onclick="AddInventory">Add Inventory</button>
 
-<p>
-    <IMS.WebApp.Controls.Common.AutoCompleteComponent
-        Label="Inventory"
-        SearchFunction="SearchInventory"
-        OnItemSelected="OnItemSelected"
-    ></IMS.WebApp.Controls.Common.AutoCompleteComponent>
-    <br />
-    @selectedItem?.Name
-</p>
-
 @code {
-    private ItemViewModel? selectedItem = null;
 
     private string searchTerm = string.Empty;
 
@@ -41,18 +29,5 @@
     private void AddInventory()
     {
         NavigationManager.NavigateTo("/addinventory");
-    }
-
-    private List<ItemViewModel>? SearchInventory(string name)
-    {
-        var list = ViewInventoriesByNameUseCase.ExecuteAsync(name).GetAwaiter().GetResult();
-        if (list == null) return null;
-
-        return list.Select(x => new ItemViewModel { Id = x.InventoryId, Name = x.InventoryName })?.ToList();
-    }
-
-    private void OnItemSelected(ItemViewModel item)
-    {
-        this.selectedItem = item;
     }
 }
