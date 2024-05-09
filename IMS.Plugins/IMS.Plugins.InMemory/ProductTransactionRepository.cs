@@ -25,7 +25,7 @@ namespace IMS.Plugins.InMemory
             this.inventoryTransactionRepository = inventoryTransactionRepository;
             this.inventoryRepository = inventoryRepository;
         }
-        public async Task ProduceAsync(string productionNumber, Product product, int quantity, double price, string doneby)
+        public async Task ProduceAsync(string productionNumber, Product product, int quantity, string doneby, double? price)
         {
             var prod = await this.productRepository.GetProductByIdAsync(product.ProductId);
             if ( prod != null)
@@ -47,11 +47,10 @@ namespace IMS.Plugins.InMemory
 
                         await this.inventoryRepository.UpdateInventoryAsync(inv);
                     }
-
                 }
             }
 
-            // add product transaction
+            // add production transaction
             this._productTransactions.Add(new ProductTransaction
             {
                 ProductionNumber = productionNumber,
