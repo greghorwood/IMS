@@ -10,12 +10,18 @@ namespace IMS.Plugins.InMemory
 {
     public class ProductTransactionRepository : IProductTransactionRepository
     {
-        private List<ProductTransaction> _productTransactions = new List<ProductTransaction>();
+        public List<ProductTransaction> _productTransactions = new List<ProductTransaction>();
 
         private readonly IProductRepository productRepository;
         private readonly IInventoryTransactionRepository inventoryTransactionRepository;
         private readonly InventoryRepository inventoryRepository;
 
+        public ProductTransactionRepository()
+        {
+            this.inventoryTransactionRepository = new InventoryTransactionRepository();
+            this.inventoryRepository = new InventoryRepository();
+            this.productRepository = new ProductRepository();
+        }
         public ProductTransactionRepository(
                 IProductRepository productRepository,
                 IInventoryTransactionRepository inventoryTransactionRepository,
@@ -25,7 +31,7 @@ namespace IMS.Plugins.InMemory
             this.inventoryTransactionRepository = inventoryTransactionRepository;
             this.inventoryRepository = inventoryRepository;
         }
-        public async Task ProduceAsync(string productionNumber, Product product, int quantity, string doneby, double? price)
+        public async Task ProduceAsync(string productionNumber, Product product, int quantity, string doneby)
         {
             var prod = await this.productRepository.GetProductByIdAsync(product.ProductId);
             if ( prod != null)
@@ -42,7 +48,7 @@ namespace IMS.Plugins.InMemory
                             -1);
 
                         // decrease the inventories
-                        var inv = await inventoryRepository.GetInventoryByIdAsync(pi.InventoryId);
+                        var inv = await this.inventoryRepository.GetInventoryByIdAsync(pi.InventoryId);
                         inv.Quantity -= pi.InventoryQuantity * quantity;
 
                         await this.inventoryRepository.UpdateInventoryAsync(inv);

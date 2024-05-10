@@ -23,7 +23,7 @@ namespace IMS.UseCases.Activities
         public async Task ExecuteAsync(string productionNumber, Product product, int quantity, string doneby)
         {
             // add transaction record
-            await this.productTransactionRepository.ProduceAsync(productionNumber, product, quantity, doneby, -1);
+            await this.productTransactionRepository.ProduceAsync(productionNumber, product, quantity, doneby);
 
             // decrease the quanity of inventories
 
