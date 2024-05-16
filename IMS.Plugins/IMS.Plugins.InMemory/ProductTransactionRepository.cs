@@ -34,9 +34,9 @@ namespace IMS.Plugins.InMemory
         public async Task ProduceAsync(string productionNumber, Product product, int quantity, string doneby)
         {
             var prod = await this.productRepository.GetProductByIdAsync(product.ProductId);
-            if ( prod != null)
+            if ( product != null)
             {
-                foreach(var pi in prod.ProductInventories)
+                foreach(var pi in product.ProductInventories)
                 {
                     if (pi.Inventory != null)
                     {
