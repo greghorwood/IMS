@@ -56,7 +56,7 @@
                 {
                     <tr>
                         <td>@it.TransactionDate.ToString("MM/dd/yyyy")</td>
-                        <td>@it.Inventory.InventoryName</td>
+                        <td>@it.Inventory?.InventoryName</td>
                         <td>
                             @if (it.ActivityType == InventoryTransactionType.PurchaseInventory)
                             {
