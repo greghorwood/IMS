@@ -14,18 +14,12 @@ namespace IMS.Plugins.InMemory
 
         private readonly IProductRepository productRepository;
         private readonly IInventoryTransactionRepository inventoryTransactionRepository;
-        private readonly InventoryRepository inventoryRepository;
+        private readonly IInventoryRepository inventoryRepository;
 
-        public ProductTransactionRepository()
-        {
-            this.inventoryTransactionRepository = new InventoryTransactionRepository();
-            this.inventoryRepository = new InventoryRepository();
-            this.productRepository = new ProductRepository();
-        }
         public ProductTransactionRepository(
                 IProductRepository productRepository,
                 IInventoryTransactionRepository inventoryTransactionRepository,
-                InventoryRepository inventoryRepository)
+                IInventoryRepository inventoryRepository)
         {
             this.productRepository = productRepository;
             this.inventoryTransactionRepository = inventoryTransactionRepository;

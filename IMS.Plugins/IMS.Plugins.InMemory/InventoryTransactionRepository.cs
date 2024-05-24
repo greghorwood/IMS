@@ -11,7 +11,7 @@ namespace IMS.Plugins.InMemory
     public class InventoryTransactionRepository : IInventoryTransactionRepository
     {
         
-        private readonly IInventoryRepository inventoryRepository;
+        public IInventoryRepository inventoryRepository;
         public List<InventoryTransaction> _inventoryTransactions = new List<InventoryTransaction>();
 
         public InventoryTransactionRepository()
