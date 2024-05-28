@@ -14,5 +14,7 @@ namespace IMS.CoreBusiness
 
         [Range(0, int.MaxValue, ErrorMessage = "Price Must Be Greater Than Or Equal To Zero")]
         public double Price { get; set; }
+
+        public List<ProductInventory> ProductInventories { get; set; } = new List<ProductInventory>();
     }
 }
