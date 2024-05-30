@@ -7,28 +7,30 @@ namespace IMS.Plugins.EFCoreSqlServer
 {
     public class InventoryEFCoreRepository : IInventoryRepository
     {
-        private readonly IMSContext db;
-        public InventoryEFCoreRepository(IMSContext db)
+        private readonly IDbContextFactory<IMSContext> contextFactory;
+        public InventoryEFCoreRepository(IDbContextFactory<IMSContext> contextFactory)
         {
-            this.db = db;
+            this.contextFactory = contextFactory;
         }
 
         public async Task AddInventoryAsync(Inventory inventory)
         {
-            this.db.Inventories.Add(inventory);
-
+            using var db = this.contextFactory.CreateDbContext();
+            db.Inventories.Add(inventory);
             await db.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Inventory>> GetInventoriesByNameAsync(string name)
         {
-            return await this.db.Inventories.Where(
+            using var db = this.contextFactory.CreateDbContext();
+            return await db.Inventories.Where(
                 x => x.InventoryName.ToLower().IndexOf(name.ToLower()) >= 0).ToListAsync();
         }
 
         public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
         {
-            var inv = await this.db.Inventories.FindAsync(inventoryId);
+            using var db = this.contextFactory.CreateDbContext();
+            var inv = await db.Inventories.FindAsync(inventoryId);
 
             if (inv != null) return inv;
 
@@ -37,7 +39,8 @@ namespace IMS.Plugins.EFCoreSqlServer
 
         public async Task UpdateInventoryAsync(Inventory inventory)
         {
-            var inv = await this.db.Inventories.FindAsync(inventory.InventoryId);
+            using var db = this.contextFactory.CreateDbContext();
+            var inv = await db.Inventories.FindAsync(inventory.InventoryId);
 
             if (inv != null)
             {

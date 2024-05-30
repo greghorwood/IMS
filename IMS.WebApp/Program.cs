@@ -10,11 +10,14 @@ using IMS.UseCases.Products.Interface;
 using IMS.UseCases.Reports;
 using IMS.UseCases.Reports.Interfaces;
 using IMS.WebApp.Data;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<IMSContext>( options =>
+// DBFactory Use Because Blazor App
+builder.Services.AddDbContextFactory<IMSContext>( options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("InventoryManagement"));
 });
@@ -24,11 +27,22 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
+if (builder.Environment.IsEnvironment("TESTING"))
+{
+    StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
-builder.Services.AddSingleton<IInventoryRepository, InventoryRepository>();
-builder.Services.AddSingleton<IProductRepository, ProductRepository>();
-builder.Services.AddSingleton<IInventoryTransactionRepository, InventoryTransactionRepository>();
-builder.Services.AddSingleton<IProductTransactionRepository, ProductTransactionRepository>();
+    builder.Services.AddSingleton<IInventoryRepository, InventoryRepository>();
+    builder.Services.AddSingleton<IProductRepository, ProductRepository>();
+    builder.Services.AddSingleton<IInventoryTransactionRepository, InventoryTransactionRepository>();
+    builder.Services.AddSingleton<IProductTransactionRepository, ProductTransactionRepository>();
+}
+else
+{
+    builder.Services.AddTransient<IInventoryRepository, InventoryEFCoreRepository>();
+    builder.Services.AddTransient<IProductRepository, ProductEFCoreRepository>();
+    builder.Services.AddTransient<IInventoryTransactionRepository, InventoryTransactionEFCoreRepository>();
+    builder.Services.AddTransient<IProductTransactionRepository, ProductTransactionEFCoreRepository>();
+}
 
 builder.Services.AddTransient<IViewInventoriesByNameUseCase, ViewInventoriesByNameUseCase>();
 builder.Services.AddTransient<IAddInventoryUseCase, AddInventoryUseCase>();
