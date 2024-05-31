@@ -50,10 +50,22 @@
 </EditForm>
 
 @code {
+    private AuthenticationState? authenticationState;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
 
     private PurchaseViewModel purchaseViewModel = new PurchaseViewModel();
 
     private Inventory? selectedInventory = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationStateTask != null)
+        {
+            authenticationState = await authenticationStateTask;
+        }
+    }
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -67,18 +79,18 @@
 
     private async Task Purchase()
     {
-        if (this.selectedInventory != null)
+        if (this.selectedInventory != null && authenticationState != null && !string.IsNullOrWhiteSpace(authenticationState.User?.Identity?.Name))
         {
             await PurchaseInventoryUseCase.ExecuteAsync(
                 this.purchaseViewModel.PONumber,
                 this.selectedInventory,
                 this.purchaseViewModel.QuantityToPurchase,
-                "Frank"
+                authenticationState.User.Identity.Name
                 );
+        }
 
             this.purchaseViewModel = new PurchaseViewModel();
             this.selectedInventory = null;
-        }
     }
 
     private async Task<List<ItemViewModel>?> SearchInventory(string name)

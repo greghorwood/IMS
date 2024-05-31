@@ -43,8 +43,21 @@
 
 
 @code {
+    private AuthenticationState? authenticationState;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+
     private ProduceViewModel produceViewModel = new ProduceViewModel();
     private Product? selectedProduct = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationStateTask != null)
+        {
+            authenticationState = await authenticationStateTask;
+        }
+    }
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -74,10 +87,15 @@
 
     private async Task Produce()
     {
-        await ProduceProductUseCase.ExecuteAsync(this.produceViewModel.productionNumber,
-            this.selectedProduct,
-            this.produceViewModel.QuantityToProduce,
-            "Frank");
+        if (this.selectedProduct != null &&
+            authenticationState != null &&
+            !string.IsNullOrWhiteSpace(authenticationState.User?.Identity?.Name))
+        {
+            await ProduceProductUseCase.ExecuteAsync(this.produceViewModel.productionNumber,
+                this.selectedProduct,
+                this.produceViewModel.QuantityToProduce,
+                authenticationState.User.Identity.Name);
+        }
 
             produceViewModel = new ProduceViewModel();
             this.selectedProduct = null;
