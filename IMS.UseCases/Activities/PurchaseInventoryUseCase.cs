@@ -22,7 +22,7 @@ namespace IMS.UseCases.Activities
         public async Task ExecuteAsync(string poNumber, Inventory inventory, int quantity, string doneBy)
         {
             // insert a record in the transaction table
-            inventoryTransactionRepository.PurchaseAsync(poNumber, inventory, quantity, doneBy, inventory.Price);
+            await inventoryTransactionRepository.PurchaseAsync(poNumber, inventory, quantity, doneBy, inventory.Price);
 
             // increase the quantity
             inventory.Quantity += quantity;

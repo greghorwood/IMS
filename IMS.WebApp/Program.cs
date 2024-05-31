@@ -11,15 +11,30 @@ using IMS.UseCases.Reports;
 using IMS.UseCases.Reports.Interfaces;
 using IMS.WebApp.Data;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+var constr = builder.Configuration.GetConnectionString("InventoryManagement");
+
+//Configure EF Core For Identity
+builder.Services.AddDbContext<AccountDbContext>(options =>
+{
+    options.UseSqlServer(constr);
+});
+
+//Configure Identity
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedEmail = false;
+}).AddEntityFrameworkStores<AccountDbContext>();
 
 // DBFactory Use Because Blazor App
 builder.Services.AddDbContextFactory<IMSContext>( options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("InventoryManagement"));
+    options.UseSqlServer(constr);
 });
 
 // Add services to the container.
@@ -76,6 +91,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
