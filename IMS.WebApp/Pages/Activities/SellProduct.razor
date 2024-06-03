@@ -5,6 +5,8 @@
 @inject ISellProductUseCase SellProductUseCase
 @inject IJSRuntime JSRuntime
 
+@attribute [Authorize(Policy = "Sales")]
+
 @using IMS.WebApp.ViewModels
 @using static IMS.WebApp.Controls.Common.AutoCompleteComponent
 <h3>SellProduct</h3>
