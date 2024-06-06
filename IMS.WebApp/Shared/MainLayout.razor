@@ -32,17 +32,17 @@
                     @if (expandSubNav1)
                     {
                         <ul class="dropdown-menu show" aria-labelledby="navbarDropdown">
-                            <li class="nav-item">
+                            <li class="nav-item" @onclick:stopPropagation="true" @onclick="@(()=>OnClickMenu("nav-item"))">
                                 <NavLink class="dropdown-item" href="purchase">
                                     <span class="oi oi-plus" aria-hidden="true"></span> Purchase
                                 </NavLink>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item" @onclick:stopPropagation="true" @onclick="@(()=>OnClickMenu("nav-item"))">
                                 <NavLink class="dropdown-item" href="produce">
                                     <span class="oi oi-plus" aria-hidden="true"></span> Produce
                                 </NavLink>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item" @onclick:stopPropagation="true" @onclick="@(()=>OnClickMenu("nav-item"))">
                                 <NavLink class="dropdown-item" href="sell">
                                     <span class="oi oi-plus" aria-hidden="true"></span> Sell
                                 </NavLink>
@@ -54,18 +54,21 @@
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Reports
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li class="nav-item">
-                            <NavLink class="dropdown-item" href="inventoryreport">
-                                <span class="oi oi-plus" aria-hidden="true"></span> Inventory Report
-                            </NavLink>
-                        </li>
-                        <li class="nav-item">
-                            <NavLink class="dropdown-item" href="productreport">
-                                <span class="oi oi-plus" aria-hidden="true"></span> Product Report
-                            </NavLink>
-                        </li>
-                    </ul>
+                    @if (expandSubNav2)
+                    {
+                        <ul class="dropdown-menu show" aria-labelledby="navbarDropdown">
+                            <li class="nav-item" @onclick:stopPropagation="true" @onclick="@(()=>OnClickMenu("nav-item"))">
+                                <NavLink class="dropdown-item" href="inventoryreport">
+                                    <span class="oi oi-plus" aria-hidden="true"></span> Inventory Report
+                                </NavLink>
+                            </li>
+                            <li class="nav-item" @onclick:stopPropagation="true" @onclick="@(()=>OnClickMenu("nav-item"))">
+                                <NavLink class="dropdown-item" href="productreport">
+                                    <span class="oi oi-plus" aria-hidden="true"></span> Product Report
+                                </NavLink>
+                            </li>
+                        </ul>
+                    }
                 </li>
             </ul>
             <LoginComponent></LoginComponent>
@@ -96,7 +99,14 @@
             case "dropdown-1":
                 expandSubNav1 = !expandSubNav1;
                 break;
-        }
+            case "dropdown-2":
+                expandSubNav2 = !expandSubNav2;
+                break;
+            case "nav-item":
+                expandSubNav1 = false;
+                expandSubNav2 = false;
+                break;
+        }   
     }
 
 }
