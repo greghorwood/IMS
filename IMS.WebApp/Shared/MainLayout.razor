@@ -5,10 +5,10 @@
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Inventory Management</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button @onclick="@(()=>OnClickMenu("navbar-toggler"))" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="@NavMenuCssClass" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -74,3 +74,21 @@
         @Body
     </div>
 </main>
+
+@code {
+
+    bool collapseNavMenu = true;
+
+    string NavMenuCssClass => "navbar-collapse" + (collapseNavMenu ? " collapse" : "");
+
+    void OnClickMenu(string className)
+    {
+        switch (className)
+        {
+            case "navbar-toggler":
+            collapseNavMenu = !collapseNavMenu;
+            break;
+        }
+    }
+
+}
